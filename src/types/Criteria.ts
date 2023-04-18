@@ -1,17 +1,17 @@
 export type CriteriaAnswer = {
-  criteriaId: number
+  criteriaId: CriteriaQuestion['id']
   answerKey: string | null
   value: string | null
 }
 
-type Weight = 'medium' | 'strong' //TODO: missing type
+export type Weight = 'low' | 'medium' | 'strong'
 
 type Option = {
   key: string
   value: string
 }
 
-export type CriteriaType = 'singleSelect' | '' //TODO: missing type (as 'multipleSelect' | 'text'...)
+export type CriteriaType = 'singleSelect'
 
 export type CriteriaQuestion = {
   id: number

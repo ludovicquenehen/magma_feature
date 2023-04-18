@@ -1,22 +1,21 @@
 <script setup lang="ts">
-import HelloWorld from './components/HelloWorld.vue'
+import datas from './datas/data'
+import TableWrapper from './components/TableWrapper.vue'
+import HelperTable from './components/HelperTable.vue'
+import { Helper } from './types/Helper';
+
+const helpers: Helper[] = datas.helpers.slice(0, 20)
 </script>
 
 <template>
-  <HelloWorld msg="Hello world !" />
+  <div class="flex flex-row">
+    <div class="bg-neutral border border-neutral min-h-full min-w-[256px]"></div>
+    <TableWrapper>
+      <HelperTable :helpers="helpers" />
+    </TableWrapper>
+  </div>
 </template>
 
 <style scoped>
-.logo {
-  height: 6em;
-  padding: 1.5em;
-  will-change: filter;
-  transition: filter 300ms;
-}
-.logo:hover {
-  filter: drop-shadow(0 0 2em #646cffaa);
-}
-.logo.vue:hover {
-  filter: drop-shadow(0 0 2em #42b883aa);
-}
+
 </style>
