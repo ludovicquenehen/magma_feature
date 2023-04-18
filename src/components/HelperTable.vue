@@ -55,8 +55,8 @@ const columns: {
 </script>
 
 <template>
-  <table class="shadow-md border-collapse rounded-lg overflow-hidden"><!-- //TODO: fix border corner -->
-    <thead class="bg-neutral-light border border-neutral h-[40px]">
+  <table>
+    <thead class="bg-neutral-light border border-neutral h-[40px]"><!-- //TODO: missing inner shadow -->
       <tr>
         <td v-for="column in columns" :class="`text-xs text-gray text-left py-3 pl-6 ${column.class}`">{{ column.name }}</td>
       </tr>
@@ -92,7 +92,7 @@ const columns: {
         </td>
       </tr>
       <tr class="border border-neutral h-[56px]">
-        <td :colspan="columns.length">PAGINATION</td><!-- //TODO: pagination -->
+        <td :colspan="columns.length">PAGINATION</td><!-- //TODO: pagination & remove inner shadow -->
       </tr>
     </tbody>
   </table>
