@@ -1,7 +1,7 @@
+import { useDateFormat } from '@vueuse/core'
 import { CriteriaAnswer, Weight } from "../types/Criteria"
 import { Status } from "../types/Helper"
 import { getHelperCriteriaByWeight } from "./criteria"
-import moment from 'moment'
 
 export const cappitalizeFirstLetter = (s: string): string => `${s.charAt(0).toUpperCase()}${s.slice(1).toLowerCase()}`
 
@@ -9,7 +9,7 @@ export const formatNumber = (n: number): string => !!n ? String(n).replace(/\B(?
 
 export const formatDate = (s: string): string => {
   if (!s) return '-'
-  return moment(s).format('MMM. DD, YYYY')
+  return useDateFormat(s, 'MMM. DD, YYYY', { locales: 'en-US' }).value
 }
 
 const statusMapping: Record<Status, string> = {
