@@ -58,26 +58,7 @@ const columns: {
 </script>
 
 <template>
-  <!-- Table border
-    <table className="rounded-sm text-left border border-separate border-tools-table-outline border-black border-1 w-full">
-      <thead className="" >
-        <th className="rounded-tl-sm bg-yellow-200 pl-12">One</th>
-        <th className="rounded-tr-sm bg-yellow-200 pl-12">Two</th>
-      </thead>
-      <tbody className="rounded-b-sm">
-        <tr>
-          <td className="bg-blue-100 pl-12">1</td>
-          <td className="bg-blue-100 pl-12">2</td>
-        </tr>
-
-        <tr>
-          <td className="rounded-bl-sm bg-blue-100 pl-12">1</td>
-          <td className="rounded-br-sm bg-blue-100 pl-12">2</td>
-        </tr>
-      </tbody>
-    </table>
-  -->
-  <table><!-- //TODO: table border-radius break at commit: 'search input & filter table' -->
+  <table>
     <thead class="bg-neutral-light border border-neutral h-[40px]"><!-- //TODO: missing inner shadow -->
       <tr>
         <td v-for="column in columns" :class="`text-xs text-gray text-left py-3 pl-6 ${column.class}`">{{ column.name }}</td>
