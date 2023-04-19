@@ -1,12 +1,15 @@
 <script setup lang="ts">
 import { Helper } from '../types/Helper';
 import { cappitalizeFirstLetter, formatCriteria, formatDate, formatNumber, formatStatus } from '../helpers/utils'
+import { useMousePressed } from '@vueuse/core'
 
 defineProps({
   helpers: { type: Array as () => Helper[], required: true },
-  query: { type: String, default: '' }
+  query: { type: String, default: '' },
+  full: { type: Boolean, required: true }
 })
 
+const { pressed } = useMousePressed()
 const columns: {
   name: string
   class: string
@@ -55,14 +58,33 @@ const columns: {
 </script>
 
 <template>
-  <table>
+  <!-- Table border
+    <table className="rounded-sm text-left border border-separate border-tools-table-outline border-black border-1 w-full">
+      <thead className="" >
+        <th className="rounded-tl-sm bg-yellow-200 pl-12">One</th>
+        <th className="rounded-tr-sm bg-yellow-200 pl-12">Two</th>
+      </thead>
+      <tbody className="rounded-b-sm">
+        <tr>
+          <td className="bg-blue-100 pl-12">1</td>
+          <td className="bg-blue-100 pl-12">2</td>
+        </tr>
+
+        <tr>
+          <td className="rounded-bl-sm bg-blue-100 pl-12">1</td>
+          <td className="rounded-br-sm bg-blue-100 pl-12">2</td>
+        </tr>
+      </tbody>
+    </table>
+  -->
+  <table><!-- //TODO: table border-radius break at commit: 'search input & filter table' -->
     <thead class="bg-neutral-light border border-neutral h-[40px]"><!-- //TODO: missing inner shadow -->
       <tr>
         <td v-for="column in columns" :class="`text-xs text-gray text-left py-3 pl-6 ${column.class}`">{{ column.name }}</td>
       </tr>
     </thead>
-    <tbody>
-      <tr v-for="helper in helpers" class="border border-neutral h-[56px]">
+    <tbody :class="{ 'cursor-grab select-none': pressed, 'cursor-pointer': !pressed || full }">
+      <tr v-for="helper in helpers" class="border border-neutral h-[56px] hover:bg-neutral-light">
         <td v-for="column in columns" class="pl-6">
           <template v-if="column.name === 'Helper'">
             <div class="flex items-center pr-4">
@@ -92,7 +114,7 @@ const columns: {
         </td>
       </tr>
       <tr class="border border-neutral h-[56px]">
-        <td :colspan="columns.length">PAGINATION</td><!-- //TODO: pagination & remove inner shadow -->
+        <td :colspan="columns.length" class="bg-red-500">PAGINATION</td><!-- //TODO: pagination & remove inner shadow -->
       </tr>
     </tbody>
   </table>

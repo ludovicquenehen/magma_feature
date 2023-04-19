@@ -17,5 +17,5 @@ export function useTableScroll() {
     lastPosition.value = v
   })
 
-  return { pressed, delta }
+  return { delta }
 }

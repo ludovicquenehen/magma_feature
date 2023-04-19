@@ -8,12 +8,12 @@ const TABLE_LIMIT = 1692
 const wrapper = ref<HTMLElement | null>(null)
 const { x } = useScroll(wrapper)
 const { width } = useWindowSize()
-const { pressed, delta }: { pressed: Ref<boolean>, delta: Ref<number> } = useTableScroll()
+const { delta }: { delta: Ref<number> } = useTableScroll()
 const shadowedLeft = computed(() => x.value > 0)
 const shadowedRight = computed(() => (width.value + x.value) < TABLE_LIMIT)
+const fullyVisible = computed(() => !shadowedLeft.value && !shadowedRight.value)
 
 watch(() => delta.value, () => {
-  console.log(width.value, delta.value, x.value)
   x.value += delta.value
 })
 </script>
@@ -22,16 +22,16 @@ watch(() => delta.value, () => {
     <div
       ref="wrapper"
       :class="[
-        'flex flex-row shadow-md border-collapse rounded-lg m-8 overflow-x-hidden',
+        'flex flex-col shadow-md border-collapse rounded-lg p-8 m-8 overflow-x-hidden',
         {
-          'cursor-grab select-none': pressed,
           'shadow-left': shadowedLeft && !shadowedRight,
           'shadow-right': shadowedRight && !shadowedLeft,
           'shadow-x': shadowedRight && shadowedLeft,
         }
       ]"
     >
-      <slot />
+      <slot name="search"></slot>
+      <slot name="table" :full="fullyVisible"></slot>
     </div>
 </template>
 
