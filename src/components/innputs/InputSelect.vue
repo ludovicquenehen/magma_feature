@@ -41,7 +41,7 @@ onClickOutside(targetOptions, () => open.value = false)
     </span>
     <!-- //TODO: z-index/overflow issue -->
     <div
-      v-if="open || true"
+      v-if="open"
       ref="targetOptions"
       class="relative bottom-[-44px] left-[-46px] z-10"
       @click="open = false"

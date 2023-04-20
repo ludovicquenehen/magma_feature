@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { computed } from 'vue';
-import Chevron from './Chevron.vue';
+import Chevron from '../icons/Chevron.vue';
 
 const THREE_DOTS = '...'
 

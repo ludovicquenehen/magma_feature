@@ -72,13 +72,13 @@ defineExpose({
 
 <style scoped>
   .shadow-x {
-    box-shadow: inset 25px 0px 50px -25px rgba(0,0,0,0.1), inset -25px 0px 50px -25px rgba(0,0,0,0.1);
+    box-shadow: inset 25px 0px 25px -25px rgba(0,0,0,0.2), inset -25px 0px 25px -25px rgba(0,0,0,0.2);
   }
   .shadow-left {
-    box-shadow: inset 25px 0px 50px -25px rgba(0,0,0,0.1);
+    box-shadow: inset 25px 0px 25px -25px rgba(0,0,0,0.2);
   }
 
   .shadow-right {
-    box-shadow: inset -25px 0px 50px -25px rgba(0,0,0,0.1);
+    box-shadow: inset -25px 0px 50px -25px rgba(0,0,0,0.2);
   }
 </style>

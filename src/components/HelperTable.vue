@@ -121,7 +121,7 @@ watch(() => perPage.value, () => page.value = 1)
   <table>
     <thead class="bg-neutral-light border border-neutral h-[40px]"><!-- //TODO: missing inner shadow -->
       <tr>
-        <!-- //TODO: col width not fixed" -->
+        <!-- //TODO: col width not fixed: toggling on search/sort/paginate -->
         <td
           v-for="column in columns"
           :class="`text-xs text-gray text-left py-3 pl-6 ${column.class}`"
@@ -194,7 +194,7 @@ watch(() => perPage.value, () => page.value = 1)
         <td :colspan="columns.length" class="relative">
           <Pagination v-if="nbPages > 1" v-model="page" :nb-pages="nbPages" class="static" />
           <InputSelect v-model="perPage" :options="[25, 50, 100, null]" class="absolute top-4 right-4" />
-        </td><!-- //TODO: remove inner shadow -->
+        </td><!-- //TODO: trailing inner shadow -->
       </tr>
     </tbody>
   </table>
