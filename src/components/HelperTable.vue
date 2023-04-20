@@ -1,15 +1,18 @@
 <script setup lang="ts">
+import { Ref, computed, ref } from 'vue';
+import { useMousePressed } from '@vueuse/core'
 import { Helper } from '../types/Helper';
 import { cappitalizeFirstLetter, formatCriteria, formatDate, formatNumber, formatStatus } from '../helpers/utils'
-import { useMousePressed } from '@vueuse/core'
+import Pagination from './Pagination.vue'
 
-defineProps({
+const props = defineProps({
   helpers: { type: Array as () => Helper[], required: true },
-  query: { type: String, default: '' },
   full: { type: Boolean, required: true }
 })
 
 const { pressed } = useMousePressed()
+
+/** Table */
 const columns: {
   name: string
   class: string
@@ -55,6 +58,19 @@ const columns: {
     format: (e: Helper) => formatCriteria(e.userCriteria, 'low')
   },
 ]
+
+/** Pagination */
+const nbRecords = computed(() => props.helpers.length)
+const page = ref(1)
+const perPage: Ref<25 | 50 | 100 | null> = ref(25)
+const nbPages = computed(() => {
+  return ~~(nbRecords.value / (perPage.value || 1)) + 1
+})
+
+const paginateHelpers = computed(() => {
+  const start = (perPage.value || 0) * (page.value - 1)
+  return props.helpers.slice(start, start + (perPage.value || nbRecords.value))
+})
 </script>
 
 <template>
@@ -64,8 +80,17 @@ const columns: {
         <td v-for="column in columns" :class="`text-xs text-gray text-left py-3 pl-6 ${column.class}`">{{ column.name }}</td>
       </tr>
     </thead>
-    <tbody :class="{ 'cursor-grab select-none': pressed, 'cursor-pointer': !pressed || full }">
-      <tr v-for="helper in helpers" class="border border-neutral h-[56px] hover:bg-neutral-light">
+    <tbody>
+      <tr
+        v-for="helper in paginateHelpers"
+        :class="[
+          'border border-neutral h-[56px] hover:bg-neutral-light',
+          {
+            'cursor-grab select-none': pressed,
+            'cursor-pointer': !pressed || full
+          }
+        ]"
+        >
         <td v-for="column in columns" class="pl-6">
           <template v-if="column.name === 'Helper'">
             <div class="flex items-center pr-4">
@@ -95,7 +120,9 @@ const columns: {
         </td>
       </tr>
       <tr class="border border-neutral h-[56px]">
-        <td :colspan="columns.length" class="bg-red-500">PAGINATION</td><!-- //TODO: pagination & remove inner shadow -->
+        <td :colspan="columns.length" class="bg-neutral-light">
+          <Pagination v-model:value="page" :nb-pages="nbPages" />
+        </td><!-- //TODO: remove inner shadow -->
       </tr>
     </tbody>
   </table>

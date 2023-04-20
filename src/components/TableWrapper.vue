@@ -20,7 +20,7 @@ watch(() => delta.value, () => {
 })
 
 /** Search */
-const helpers: Helper[] = datas.helpers.slice(0, 20)
+const helpers: Helper[] = datas.helpers
 const query = ref('')
 const filterHelpers = computed(() => {
   const q = query.value.trim()
@@ -30,7 +30,7 @@ const filterHelpers = computed(() => {
 
 <template>
   <div class="overflow-x-hidden">
-    <div class="ml-8 mt-8">
+    <div class="ml-8 my-8">
       <Input v-model="query" icon="search" type="text" placeholder="Search any helper..." />
     </div>
     <div
