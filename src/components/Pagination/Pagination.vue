@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { computed, ref } from 'vue';
+import { computed, ref, watch } from 'vue';
 import Chevron from './Chevron.vue';
 
 const THREE_DOTS = '...'
@@ -30,13 +30,14 @@ const range = computed(() => {
 
   return [
     1,
-    range[0] !== 2 && THREE_DOTS,
+    !!range.length && range[0] !== 2 && THREE_DOTS,
     ...range,
-    range[range.length - 1] !== (props.nbPages - 1) && THREE_DOTS,
+    !!range.length && range[range.length - 1] !== (props.nbPages - 1) && THREE_DOTS,
     props.nbPages
   ].filter(Boolean)
 })
 
+watch(() => props.value, (v: number) => current.value = v)
 </script>
 
 <template>
