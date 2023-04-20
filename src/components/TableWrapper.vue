@@ -43,6 +43,10 @@ const filterHelpers = computed(() => {
   const q = query.value.trim()
   return helpers.filter((h: Helper) => h.firstname.includes(q) || h.lastname.includes(q) || h.email.includes(q))
 })
+const clearQuery = () => query.value = ''
+defineExpose({
+  clearQuery
+})
 </script>
 
 <template>
@@ -53,7 +57,7 @@ const filterHelpers = computed(() => {
     <div
       ref="wrapper"
       :class="[
-        'flex flex-col shadow-md border-collapse rounded-lg mx-8 overflow-x-hidden',
+        'flex flex-col shadow-md border-collapse rounded-lg mx-8 mb-24 overflow-x-hidden',
         {
           'shadow-left': shadowedLeft && !shadowedRight,
           'shadow-right': shadowedRight && !shadowedLeft,
@@ -61,7 +65,7 @@ const filterHelpers = computed(() => {
         }
       ]"
     >
-      <slot :helpers="filterHelpers" :full="fullyVisible"></slot>
+      <slot :helpers="filterHelpers" :full="fullyVisible" :query="query"></slot>
     </div>
   </div>
 </template>

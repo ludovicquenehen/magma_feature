@@ -1,18 +1,19 @@
 <script setup lang="ts">
-import { Ref, computed, ref } from 'vue';
+import { Ref, computed, ref, watch } from 'vue';
 import { useMousePressed } from '@vueuse/core'
 import { Helper } from '../types/Helper';
 import { cappitalizeFirstLetter, formatDate, formatNumber, formatStatus } from '../helpers/utils'
 import Pagination from './Pagination/Pagination.vue'
 import InputSelect from './innputs/InputSelect.vue';
 
+export type PerPage = 25 | 50 | 100 | null
+
+defineEmits(['clearQuery'])
 const props = defineProps({
   helpers: { type: Array as () => Helper[], required: true },
-  full: { type: Boolean, required: true }
+  full: { type: Boolean, required: true },
+  query: { type: String, required: true },
 })
-
-const originalHelpers: Readonly<Helper[]> = props.helpers
-const currentHelpers = ref(originalHelpers)
 
 const { pressed } = useMousePressed()
 
@@ -71,7 +72,7 @@ const columns: {
   },
 ]
 
-/** Sort & Pagination */
+/** Sort */
 const sortColumn: Ref<String | null> = ref(null)
 const sortOrder: Ref<'asc' | 'desc' | null> = ref(null)
 
@@ -98,9 +99,11 @@ const sortedHelpers = computed(() => {
   return props.helpers
 })
 
+
+/** Pagination */
 const nbRecords = computed(() => props.helpers.length)
 const page = ref(1)
-const perPage: Ref<25 | 50 | 100 | null> = ref(25)
+const perPage: Ref<PerPage> = ref(25)
 const nbPages = computed(() => {
   return ~~(nbRecords.value / (perPage.value || 1)) + 1
 })
@@ -109,6 +112,9 @@ const paginatedHelpers = computed(() => {
   const start = (perPage.value || 0) * (page.value - 1)
   return sortedHelpers.value.slice(start, start + (perPage.value || nbRecords.value))
 })
+
+watch(() => props.query, () => page.value = 1)
+watch(() => perPage.value, () => page.value = 1)
 </script>
 
 <template>
@@ -129,6 +135,23 @@ const paginatedHelpers = computed(() => {
       </tr>
     </thead>
     <tbody>
+      <tr v-if="paginatedHelpers.length === 0">
+        <td :colspan="columns.length">
+          <div class="flex justify-center items-center">
+            <div class="flex flex-col justify-center items-center h-[240px] w-[380px]">
+              <div class="rounded-full flex justify-center items-center p-2 bg-ripple-1 h-12 w-12 mb-4">
+                <div class="rounded-full flex justify-center items-center p-2 bg-ripple-2 h-full w-full">
+                  <img src="/images/svg/search-blue.svg" class="w-[18px] mt-[8]" />
+                </div>
+              </div>
+              <span class="text-dark text-center leading-6 mb-1">No helper found</span>
+              <span class="text-gray text-center text-sm">Your search “<span class="font-semibold">{{ query }}</span>” didn’t match with any helper.</span>
+              <span class="text-observer text-center font-medium mt-[26px] hover:cursor-pointer" @click="$emit('clearQuery')">Clear search</span>
+            </div>
+          </div>
+        </td>
+      </tr>
+      <!-- //TODO: hover override table inner shadow -->
       <tr
         v-for="helper in paginatedHelpers"
         :class="[
@@ -168,9 +191,9 @@ const paginatedHelpers = computed(() => {
         </td>
       </tr>
       <tr class="border border-neutral h-[56px]">
-        <td :colspan="columns.length" class="bg-neutral-light">
-          <Pagination v-if="nbPages > 1" v-model:value="page" :nb-pages="nbPages" />
-          <InputSelect v-model="perPage" :options="[25, 50, 100, null]" />
+        <td :colspan="columns.length" class="relative">
+          <Pagination v-if="nbPages > 1" v-model="page" :nb-pages="nbPages" class="static" />
+          <InputSelect v-model="perPage" :options="[25, 50, 100, null]" class="absolute top-4 right-4" />
         </td><!-- //TODO: remove inner shadow -->
       </tr>
     </tbody>
