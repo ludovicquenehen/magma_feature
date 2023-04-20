@@ -12,7 +12,7 @@ const value = computed({
   get() {
     return props.modelValue
   },
-  set(value) {
+  set(value: string) {
     emit('update:modelValue', value)
   }
 })
@@ -23,7 +23,7 @@ const clear = () => emit('update:modelValue', '')
 <template>
   <div
     :class="[
-      'wrapper relative w-[400px] h-[40px] mb-6 flex flex-row border rounded-[5px]',
+      'relative w-[400px] h-[40px] mb-6 flex flex-row border border-[#CBD5E1] rounded-[5px]',
       { '!border-observer focused': focused }
     ]"
   >
@@ -41,10 +41,6 @@ const clear = () => emit('update:modelValue', '')
 </template>
 
 <style scoped>
-.wrapper {
-  border-color: #CBD5E1
-}
-
 .focused {
   box-shadow: 0px 1px 2px rgba(16, 24, 40, 0.05), 0px 0px 0px 2px #C7D7FE;
 }
