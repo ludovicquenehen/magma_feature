@@ -1,29 +1,36 @@
 <script setup lang="ts">
-import { computed, ref, watch } from 'vue';
+import { computed } from 'vue';
 import Chevron from './Chevron.vue';
 
 const THREE_DOTS = '...'
 
 const props = defineProps({
-  value: { type: Number, default: 1 },
+  modelValue: { type: Number, default: 1 },
   nbPages: { type: Number, required: true },
 })
-const emit = defineEmits(['update:value'])
+const emit = defineEmits(['update:modelValue'])
 
 const set = (v: number) => {
   if (v <= 0 || v > props.nbPages) return
-  current.value = v
-  emit('update:value', v)
+  value.value = v
 }
 
-const current = ref(1)
+const value = computed({
+  get() {
+    return props.modelValue
+  },
+  set(value: number) {
+    emit('update:modelValue', value)
+  }
+})
+
 const range = computed(() => {
-  const before = current.value - 1
-  const after = current.value + 1
+  const before = value.value - 1
+  const after = value.value + 1
   const range = [
     after >= props.nbPages && before - 1,
     before > 0 && before,
-    current.value,
+    value.value,
     after > 0 && after,
     before <= 0 && after + 1
   ].filter(e => !!e && e > 1 && e < props.nbPages) as number[]
@@ -37,18 +44,17 @@ const range = computed(() => {
   ].filter(Boolean)
 })
 
-watch(() => props.value, (v: number) => current.value = v)
 </script>
 
 <template>
   <div class="flex flex-row justify-center">
-    <Chevron :disabled="current === 1" class="mr-[22px]" @click="set(current - 1)" />
+    <Chevron :disabled="value === 1" class="mr-[22px]" @click="set(value - 1)" />
     <span
       v-for="p in range"
       :class="[
         'w-8 h-8 font-medium text-center rounded-full mr-[3px] pt-1 text-gray hover:cursor-pointer hover:bg-[#F1F5F9]',
         { 
-          'bg-observer-light text-observer': p === current,
+          'bg-observer-light text-observer': p === value,
           'hover:bg-neutral-light hover:cursor-default': p === '...'
         }
       ]
@@ -57,7 +63,7 @@ watch(() => props.value, (v: number) => current.value = v)
     >
       {{ p }}
     </span>
-    <Chevron direction="right" :disabled="current === nbPages" class="ml-[22px]" @click="set(current + 1)" />
+    <Chevron direction="right" :disabled="value === nbPages" class="ml-[22px]" @click="set(value + 1)" />
   </div>
 </template>
 
