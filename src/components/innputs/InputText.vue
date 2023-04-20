@@ -1,17 +1,13 @@
 <script setup lang="ts">
-import { ref } from 'vue';
+import { computed, ref } from 'vue';
 
-const el = ref<HTMLElement | null>(null)
-
-const emit = defineEmits(['update:value'])
-defineProps({
+const emit = defineEmits(['update:modelValue'])
+const props = defineProps({
+  modelValue: { type: String, required: true },
   icon: { type: String, default: null },
 })
 
-const current = ref('')
 const focused = ref(false)
-//TODO: 
-/*
 const value = computed({
   get() {
     return props.modelValue
@@ -20,9 +16,8 @@ const value = computed({
     emit('update:modelValue', value)
   }
 })
-*/
 
-const clear = () => current.value = ''
+const clear = () => emit('update:modelValue', '')
 </script>
 
 <template>
@@ -34,16 +29,14 @@ const clear = () => current.value = ''
   >
     <img :src="`/images/svg/${icon}.svg`" class="absolute left-[18px] top-[14px]" />
     <input
-      ref="el"
-      v-model="current"
+      v-model="value"
       type="text"
       v-bind="$attrs"
-      @input="emit('update:value', current)"
       @focus="focused = true"
       @blur="focused = false"
       class="bg-white ml-[40px] focus:outline-none !w-full"
     />
-    <img v-if="current !== ''" src="/images/svg/cross.svg" class="absolute right-[18px] top-[14px]" @click="clear" />
+    <img v-if="value !== ''" src="/images/svg/cross.svg" class="absolute right-[18px] top-[14px]" @click="clear" />
   </div>
 </template>
 
