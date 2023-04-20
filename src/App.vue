@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { ref } from 'vue';
-import TableWrapper from './components/TableWrapper.vue'
-import HelperTable from './components/HelperTable.vue'
+import TableWrapper from './components/table/TableWrapper.vue'
+import HelperTable from './components/table/HelperTable.vue'
 
 const wrapper = ref(null)
 </script>

@@ -1,11 +1,11 @@
 <script setup lang="ts">
 import { computed, ref, Ref, watch } from 'vue'
 import { useScroll, useWindowSize } from '@vueuse/core'
-import { useTableScroll } from './../composables/useTableScroll'
-import InputText from './innputs/InputText.vue'
-import { Helper, Status } from './../types/Helper';
-import datas from './../datas/data'
-import { getHelperCriteriaByWeight } from '../helpers/criteria';
+import { useTableScroll } from '../../composables/useTableScroll'
+import InputText from '../innputs/InputText.vue'
+import { Helper, Status } from '../../types/Helper';
+import datas from '../../datas/data'
+import { getHelperCriteriaByWeight } from '../../helpers/criteria';
 
 /** Table behavior */
 const TABLE_LIMIT = 1692
