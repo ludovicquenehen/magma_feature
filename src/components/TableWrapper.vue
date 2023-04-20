@@ -2,9 +2,10 @@
 import { computed, ref, Ref, watch } from 'vue'
 import { useScroll, useWindowSize } from '@vueuse/core'
 import { useTableScroll } from './../composables/useTableScroll'
-import Input from './../components/Input.vue'
-import { Helper } from './../types/Helper';
+import InputText from './innputs/InputText.vue'
+import { Helper, Status } from './../types/Helper';
 import datas from './../datas/data'
+import { getHelperCriteriaByWeight } from '../helpers/criteria';
 
 /** Table behavior */
 const TABLE_LIMIT = 1692
@@ -20,7 +21,23 @@ watch(() => delta.value, () => {
 })
 
 /** Search */
-const helpers: Helper[] = datas.helpers
+const STATUS_PONDERATION: Record<Status, number> = {
+  'highly-active': 5,
+  'active': 4,
+  'overbooked': 3,
+  'observer': 2,
+  'sleeper': 1,
+  'invited': 0
+}
+const helpers: Helper[] = datas.helpers.map((e: Helper) => ({
+  ...e,
+  statusPonderation: STATUS_PONDERATION[e.status],
+  strongCriteria: getHelperCriteriaByWeight(e.userCriteria, 'strong')?.value,
+  mediumCriteria: getHelperCriteriaByWeight(e.userCriteria, 'medium')?.value,
+  lowCriteria: getHelperCriteriaByWeight(e.userCriteria, 'low')?.value,
+  joinedOnTm: e.joinedOn ? new Date(e.joinedOn).getTime() : '-'
+}))
+
 const query = ref('')
 const filterHelpers = computed(() => {
   const q = query.value.trim()
@@ -31,7 +48,7 @@ const filterHelpers = computed(() => {
 <template>
   <div class="overflow-x-hidden">
     <div class="ml-8 my-8">
-      <Input v-model="query" icon="search" type="text" placeholder="Search any helper..." />
+      <InputText v-model="query" icon="search" placeholder="Search any helper..." />
     </div>
     <div
       ref="wrapper"

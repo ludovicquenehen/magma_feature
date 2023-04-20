@@ -10,6 +10,17 @@ defineProps({
 
 const current = ref('')
 const focused = ref(false)
+//TODO: 
+/*
+const value = computed({
+  get() {
+    return props.modelValue
+  },
+  set(value) {
+    emit('update:modelValue', value)
+  }
+})
+*/
 
 const clear = () => current.value = ''
 </script>
@@ -25,6 +36,7 @@ const clear = () => current.value = ''
     <input
       ref="el"
       v-model="current"
+      type="text"
       v-bind="$attrs"
       @input="emit('update:value', current)"
       @focus="focused = true"

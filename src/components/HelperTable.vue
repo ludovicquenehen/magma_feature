@@ -2,64 +2,102 @@
 import { Ref, computed, ref } from 'vue';
 import { useMousePressed } from '@vueuse/core'
 import { Helper } from '../types/Helper';
-import { cappitalizeFirstLetter, formatCriteria, formatDate, formatNumber, formatStatus } from '../helpers/utils'
-import Pagination from './Pagination.vue'
+import { cappitalizeFirstLetter, formatDate, formatNumber, formatStatus } from '../helpers/utils'
+import Pagination from './Pagination/Pagination.vue'
+import InputSelect from './innputs/InputSelect.vue';
 
 const props = defineProps({
   helpers: { type: Array as () => Helper[], required: true },
   full: { type: Boolean, required: true }
 })
 
+const originalHelpers: Readonly<Helper[]> = props.helpers
+const currentHelpers = ref(originalHelpers)
+
 const { pressed } = useMousePressed()
 
 /** Table */
 const columns: {
   name: string
+  property: keyof Helper
   class: string
-  sortable?: 'asc' | 'desc'
   format?: Function
 }[] = [
 {
     name: 'Helper',
+    property: 'firstname',
     class: 'helper'
   },
   {
     name: 'Status',
+    property: 'statusPonderation',
     class: 'status'
   },
   {
     name: 'Relations',
+    property: 'relations',
     class: 'relations',
-    format: (e: Helper) => formatNumber(e.relations)
+    format: (e: Helper): string => formatNumber(e.relations)
   },
   {
     name: 'Points',
+    property: 'points',
     class: 'points',
-    format: (e: Helper) => formatNumber(e.points)
+    format: (e: Helper): string => formatNumber(e.points)
   },
   {
     name: 'Joined on',
+    property: 'joinedOnTm',
     class: 'joined-on',
-    format: (e: Helper) => e.joinedOn && formatDate(e.joinedOn)
+    format: (e: Helper): string => formatDate(e.joinedOn)
   },
   {
     name: 'Strong criteria',
+    property: 'strongCriteria',
     class: 'criteria',
-    format: (e: Helper) => formatCriteria(e.userCriteria, 'strong')
+    format: (e: Helper): string => e.strongCriteria || '-'
   },
   {
     name: 'Medium criteria',
+    property: 'mediumCriteria',
     class: 'criteria',
-    format: (e: Helper): string => formatCriteria(e.userCriteria, 'medium')
+    format: (e: Helper): string => e.mediumCriteria || '-'
   },
   {
     name: 'Low criteria',
+    property: 'lowCriteria',
     class: 'criteria',
-    format: (e: Helper) => formatCriteria(e.userCriteria, 'low')
+    format: (e: Helper): string => e.lowCriteria || '-'
   },
 ]
 
-/** Pagination */
+/** Sort & Pagination */
+const sortColumn: Ref<String | null> = ref(null)
+const sortOrder: Ref<'asc' | 'desc' | null> = ref(null)
+
+const setSort = (column: string) => {
+  page.value = 1
+
+  const same = sortColumn.value === column
+  if (!sortOrder.value) sortOrder.value = 'desc'
+  else if (same) {
+    if (sortOrder.value === 'desc') sortOrder.value = 'asc'
+    else sortOrder.value = null
+  }
+  if (sortOrder.value) sortColumn.value = column
+  else {
+    sortColumn.value = null
+    sortOrder.value = null
+
+  }
+}
+
+const sortedHelpers = computed(() => {
+  if (sortOrder.value === 'asc') return props.helpers.sort((a: any, b: any) => a[sortColumn.value as string] - b[sortColumn.value as string])
+  if (sortOrder.value === 'desc') return props.helpers.sort((a: any, b: any) => b[sortColumn.value as string] - a[sortColumn.value as string])
+  return props.helpers
+})
+
 const nbRecords = computed(() => props.helpers.length)
 const page = ref(1)
 const perPage: Ref<25 | 50 | 100 | null> = ref(25)
@@ -67,9 +105,9 @@ const nbPages = computed(() => {
   return ~~(nbRecords.value / (perPage.value || 1)) + 1
 })
 
-const paginateHelpers = computed(() => {
+const paginatedHelpers = computed(() => {
   const start = (perPage.value || 0) * (page.value - 1)
-  return props.helpers.slice(start, start + (perPage.value || nbRecords.value))
+  return sortedHelpers.value.slice(start, start + (perPage.value || nbRecords.value))
 })
 </script>
 
@@ -77,12 +115,22 @@ const paginateHelpers = computed(() => {
   <table>
     <thead class="bg-neutral-light border border-neutral h-[40px]"><!-- //TODO: missing inner shadow -->
       <tr>
-        <td v-for="column in columns" :class="`text-xs text-gray text-left py-3 pl-6 ${column.class}`">{{ column.name }}</td>
+        <!-- //TODO: col width not fixed" -->
+        <td
+          v-for="column in columns"
+          :class="`text-xs text-gray text-left py-3 pl-6 ${column.class}`"
+        >
+          <div class="flex hover:cursor-pointer" @click="setSort(column.property)">
+            <span class="mr-[6.92px]">{{ column.name }}</span>
+            <img v-if="column.property === sortColumn && sortOrder === 'asc'" src="/images/svg/arrow-up.svg" />
+            <img v-if="column.property === sortColumn && sortOrder === 'desc'" src="/images/svg/arrow-down.svg" />
+          </div>
+      </td>
       </tr>
     </thead>
     <tbody>
       <tr
-        v-for="helper in paginateHelpers"
+        v-for="helper in paginatedHelpers"
         :class="[
           'border border-neutral h-[56px] hover:bg-neutral-light',
           {
@@ -121,7 +169,8 @@ const paginateHelpers = computed(() => {
       </tr>
       <tr class="border border-neutral h-[56px]">
         <td :colspan="columns.length" class="bg-neutral-light">
-          <Pagination v-model:value="page" :nb-pages="nbPages" />
+          <Pagination v-if="nbPages > 1" v-model:value="page" :nb-pages="nbPages" />
+          <InputSelect v-model="perPage" :options="[25, 50, 100, null]" />
         </td><!-- //TODO: remove inner shadow -->
       </tr>
     </tbody>

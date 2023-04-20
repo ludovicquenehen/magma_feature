@@ -9,12 +9,16 @@ export type Helper = {
   email: string
   profilePictureUrl: string
   status: Status
+  statusPonderation?: number
   relations: number
   points: number
   joinedOn: string | null
-  lastSeen: string | null
+  joinedOnTm: number | string
   tagIds: number[]
   userCriteria: CriteriaAnswer[]
+  strongCriteria?: string | null
+  mediumCriteria?: string | null
+  lowCriteria?: string | null
   score: number
   activeRelationsCount: number
   challengesCount: number

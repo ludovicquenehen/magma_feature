@@ -7,7 +7,7 @@ export const cappitalizeFirstLetter = (s: string): string => `${s.charAt(0).toUp
 
 export const formatNumber = (n: number): string => !!n ? String(n).replace(/\B(?=(\d{3})+(?!\d))/g, " ") : '-'
 
-export const formatDate = (s: string): string => {
+export const formatDate = (s: string | null): string => {
   if (!s) return '-'
   return useDateFormat(s, 'MMM. DD, YYYY', { locales: 'en-US' }).value
 }
@@ -21,5 +21,3 @@ const statusMapping: Record<Status, string> = {
   invited: 'Invited'
 }
 export const formatStatus = (s: Status): string => statusMapping[s] || ''
-
-export const formatCriteria = (c: CriteriaAnswer[], weight: Weight): string => getHelperCriteriaByWeight(c, weight)?.value || '-'
