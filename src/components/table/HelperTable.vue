@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { Ref, computed, ref, watch } from 'vue';
+import { Ref, computed, onMounted, ref, watch } from 'vue';
 import { useMousePressed } from '@vueuse/core'
 import { Helper } from '../../types/Helper';
 import { cappitalizeFirstLetter, formatDate, formatNumber, formatStatus } from '../../helpers/utils'
@@ -8,7 +8,7 @@ import InputSelect from '../inputs/InputSelect.vue';
 
 export type PerPage = 25 | 50 | 100 | null
 
-const emit = defineEmits(['clearQuery', 'showDetail'])
+const emit = defineEmits(['update:modelValue', 'clearQuery', 'showDetail'])
 const props = defineProps({
   helpers: { type: Array as () => Helper[], required: true },
   full: { type: Boolean, required: true },
@@ -17,12 +17,18 @@ const props = defineProps({
 
 const { pressed } = useMousePressed()
 
+const current: Ref<Helper[]> = ref([])
+onMounted(() => {
+  current.value = [...props.helpers]
+})
+
 /** Table */
 const columns: {
   name: string
   property: keyof Helper
   class: string
   format?: Function
+  type?: 'number' | 'string'
 }[] = [
 {
     name: 'Helper',
@@ -38,13 +44,15 @@ const columns: {
     name: 'Relations',
     property: 'relations',
     class: 'relations',
-    format: (e: Helper): string => formatNumber(e.relations)
+    format: (e: Helper): string => formatNumber(e.relations),
+    type: 'number'
   },
   {
     name: 'Points',
     property: 'points',
     class: 'points',
-    format: (e: Helper): string => formatNumber(e.points)
+    format: (e: Helper): string => formatNumber(e.points),
+    type: 'number'
   },
   {
     name: 'Joined on',
@@ -72,11 +80,17 @@ const columns: {
   },
 ]
 
+/** Search */
+const filterHelpers = computed(() => {
+  const q = props.query.trim()
+  return current.value.filter((h: Helper) => h.firstname.includes(q) || h.lastname.includes(q) || h.email.includes(q))
+})
+
 /** Sort */
 const sortColumn: Ref<String | null> = ref(null)
 const sortOrder: Ref<'asc' | 'desc' | null> = ref(null)
 
-const setSort = (column: string) => {
+const setSort = (column: string, type: 'number' | 'text') => {
   page.value = 1
 
   const same = sortColumn.value === column
@@ -89,18 +103,27 @@ const setSort = (column: string) => {
   else {
     sortColumn.value = null
     sortOrder.value = null
-
   }
+  current.value = [...props.helpers]
 }
 
 const sortedHelpers = computed(() => {
-  if (sortOrder.value === 'asc') return props.helpers.sort((a: any, b: any) => a[sortColumn.value as string] - b[sortColumn.value as string])
-  if (sortOrder.value === 'desc') return props.helpers.sort((a: any, b: any) => b[sortColumn.value as string] - a[sortColumn.value as string])
-  return props.helpers
+  const type = columns.find(e => e.property === sortColumn.value)?.type || 'string'
+  if (sortOrder.value === 'asc') return filterHelpers.value.sort((a: Helper, b: Helper) => {
+    const aString = String(a[sortColumn.value  as keyof Helper]) || ''
+    const bString = String(b[sortColumn?.value  as keyof Helper])|| ''
+    return type === 'number' ? Number(aString) - Number(bString) : aString.localeCompare(bString)
+  })
+  if (sortOrder.value === 'desc') return filterHelpers.value.sort((a: any, b: any) => {
+    const aString = String(a[sortColumn.value as keyof Helper])|| ''
+    const bString = String(b[sortColumn?.value  as keyof Helper])|| ''
+    return type === 'number' ? Number(bString) - Number(aString) : bString.localeCompare(aString)
+  })
+  return filterHelpers.value
 })
 
 /** Pagination */
-const nbRecords = computed(() => props.helpers.length)
+const nbRecords = computed(() => filterHelpers.value.length)
 const page = ref(1)
 const perPage: Ref<PerPage> = ref(25)
 const nbPages = computed(() => {
@@ -125,7 +148,7 @@ const showDetails = (herlperId: number) => {
   const rowTop = (hovered as unknown as Element)?.getBoundingClientRect().top;
   emit('showDetail', hovered === null ? -1 : (rowTop - containerTop))
 }
-watch(() => props.helpers, (v) => {
+watch(() => filterHelpers.value, (v) => {
   if (v.length === 0) showDetails(-1)
 })
 </script>

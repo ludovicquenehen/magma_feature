@@ -39,10 +39,6 @@ const helpers: Helper[] = datas.helpers.map((e: Helper) => ({
 }))
 
 const query = ref('')
-const filterHelpers = computed(() => {
-  const q = query.value.trim()
-  return helpers.filter((h: Helper) => h.firstname.includes(q) || h.lastname.includes(q) || h.email.includes(q))
-})
 const clearQuery = () => query.value = ''
 defineExpose({
   clearQuery
@@ -65,7 +61,7 @@ defineExpose({
         }
       ]"
     >
-      <slot :helpers="filterHelpers" :full="fullyVisible" :query="query"></slot>
+      <slot :helpers="helpers" :full="fullyVisible" :query="query"></slot>
     </div>
   </div>
 </template>
