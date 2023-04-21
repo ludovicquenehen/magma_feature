@@ -1,19 +1,41 @@
 <script setup lang="ts">
-import { ref } from 'vue';
+import { computed, ref } from 'vue';
 import TableWrapper from './components/table/TableWrapper.vue'
 import HelperTable from './components/table/HelperTable.vue'
 
 const wrapper = ref(null)
+const detailsPosition = ref('')
+const wrapperLimit = computed(() => {
+  const containerTop = document.body.getBoundingClientRect().left
+  const right = (wrapper?.value as unknown as Element)?.getBoundingClientRect().right - containerTop - 140
+  return right
+})
+const setDetailsPosition = (v: string) => {
+  detailsPosition.value = v
+}
 </script>
 
 <template>
   <div class="flex flex-row">
     <div class="bg-neutral border border-neutral min-h-full min-w-[256px]"></div>
-    <TableWrapper ref="wrapper">
+    <TableWrapper>
       <template v-slot="props">
-        <HelperTable :helpers="props.helpers" :full="props.full" :query="props.query" @clearQuery="wrapper?.clearQuery" />
+        <div ref="wrapper">
+          <HelperTable :helpers="props.helpers" :full="props.full" :query="props.query" @clearQuery="wrapper?.clearQuery" @showDetail="setDetailsPosition" />
+        </div>
       </template>
     </TableWrapper>
+  </div>
+  <div
+    v-if="+detailsPosition !== -1"
+    inert
+    :style="{
+      top: `${detailsPosition}px`,
+      left: `${wrapperLimit}px`
+    }"
+    class="absolute h-[56px] bg-neutral-light/50 pt-[18px] pl-14 text-observer font-medium"
+    >
+      <p>Détails</p>
   </div>
 </template>
 
