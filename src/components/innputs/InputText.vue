@@ -34,7 +34,7 @@ const clear = () => emit('update:modelValue', '')
       v-bind="$attrs"
       @focus="focused = true"
       @blur="focused = false"
-      class="bg-white ml-[40px] focus:outline-none !w-full"
+      class="bg-white ml-[40px] focus:outline-none !w-[320px]"
     />
     <img v-if="value !== ''" src="/images/svg/cross.svg" class="absolute right-[18px] top-[14px]" @click="clear" />
   </div>
