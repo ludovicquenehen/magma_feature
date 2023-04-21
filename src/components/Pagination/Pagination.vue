@@ -48,7 +48,14 @@ const range = computed(() => {
 
 <template>
   <div class="flex flex-row justify-center">
-    <Chevron :disabled="value === 1" class="mr-[22px]" @click="set(value - 1)" />
+    <Chevron
+      :disabled="value === 1"
+      :class="[
+        'w-8 h-8 mr-[22px] text-center rounded-full hover:cursor-pointer hover:bg-[#F1F5F9]', 
+        { 'hover:bg-white !cursor-not-allowed': value === 1 }
+      ]"
+      @click="set(value - 1)"
+    />
     <span
       v-for="p in range"
       :class="[
@@ -63,7 +70,15 @@ const range = computed(() => {
     >
       {{ p }}
     </span>
-    <Chevron direction="right" :disabled="value === nbPages" class="ml-[22px]" @click="set(value + 1)" />
+    <Chevron
+      direction="right"
+      :disabled="value === nbPages"
+      :class="[
+        'w-8 h-8 ml-[22px] text-center rounded-full hover:cursor-pointer hover:bg-[#F1F5F9]', 
+        { 'hover:bg-white !cursor-not-allowed': value === nbPages }
+      ]"
+      @click="set(value + 1)"
+    />
   </div>
 </template>
 
