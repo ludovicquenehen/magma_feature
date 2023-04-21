@@ -28,7 +28,7 @@ const setDetailsPosition = (v: string) => {
     </TableWrapper>
   </div>
   <div
-    v-if="+detailsPosition !== -1"
+    v-if="detailsPosition"
     inert
     :style="{
       top: `${detailsPosition}px`,
