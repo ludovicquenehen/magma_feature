@@ -4,10 +4,11 @@ import TableWrapper from './components/table/TableWrapper.vue'
 import HelperTable from './components/table/HelperTable.vue'
 
 const wrapper = ref(null)
+const container = ref(null)
 const detailsPosition = ref('')
 const wrapperLimit = computed(() => {
   const containerTop = document.body.getBoundingClientRect().left
-  const right = (wrapper?.value as unknown as Element)?.getBoundingClientRect().right - containerTop - 140
+  const right = (container?.value as unknown as Element)?.getBoundingClientRect().right - containerTop - 140
   return right
 })
 const setDetailsPosition = (v: string) => {
@@ -18,9 +19,9 @@ const setDetailsPosition = (v: string) => {
 <template>
   <div class="flex flex-row">
     <div class="bg-neutral border border-neutral min-h-full min-w-[256px]"></div>
-    <TableWrapper>
+    <TableWrapper ref="wrapper">
       <template v-slot="props">
-        <div ref="wrapper">
+        <div ref="container">
           <HelperTable :helpers="props.helpers" :full="props.full" :query="props.query" @clearQuery="wrapper?.clearQuery" @showDetail="setDetailsPosition" />
         </div>
       </template>
