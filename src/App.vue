@@ -7,9 +7,9 @@ const wrapper = ref(null)
 const container = ref(null)
 const detailsPosition = ref('')
 const wrapperLimit = computed(() => {
-  const containerTop = document.body.getBoundingClientRect().left
-  const right = (container?.value as unknown as Element)?.getBoundingClientRect().right - containerTop - 140
-  return right
+  const containerLeft = document.body.getBoundingClientRect().left
+  const right = (container?.value as unknown as Element)?.getBoundingClientRect().right
+  return right - containerLeft
 })
 const setDetailsPosition = (v: string) => {
   detailsPosition.value = v
@@ -32,11 +32,11 @@ const setDetailsPosition = (v: string) => {
     inert
     :style="{
       top: `${detailsPosition}px`,
-      left: `${wrapperLimit}px`
+      left: `${wrapperLimit - 140}px`
     }"
     class="absolute h-[56px] bg-neutral-light/50 pt-[18px] pl-14 text-observer font-medium"
-    >
-      <p>Détails</p>
+  >
+    <p>Détails</p>
   </div>
 </template>
 
