@@ -99,7 +99,6 @@ const sortedHelpers = computed(() => {
   return props.helpers
 })
 
-
 /** Pagination */
 const nbRecords = computed(() => props.helpers.length)
 const page = ref(1)
@@ -126,6 +125,9 @@ const showDetails = (herlperId: number) => {
   const rowTop = (hovered as unknown as Element)?.getBoundingClientRect().top;
   emit('showDetail', hovered === null ? -1 : (rowTop - containerTop))
 }
+watch(() => props.helpers, (v) => {
+  if (v.length === 0) showDetails(-1)
+})
 </script>
 
 <template>
