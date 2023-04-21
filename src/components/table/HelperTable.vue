@@ -209,7 +209,7 @@ watch(() => props.helpers, (v) => {
         <tr v-if="nbPages > 1" class="border border-neutral h-[56px]">
           <td :colspan="columns.length" class="relative">
             <Pagination v-model="page" :nb-pages="nbPages" class="static" />
-            <InputSelect v-model="perPage" :options="[25, 50, 100, null]" class="absolute top-4 right-4" />
+            <InputSelect v-model="perPage" :options="[25, 50, 100, null]" class="absolute top-3 right-4" />
           </td><!-- //TODO: trailing inner shadow -->
         </tr>
       </tbody>

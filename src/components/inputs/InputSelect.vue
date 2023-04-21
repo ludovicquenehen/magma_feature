@@ -14,6 +14,7 @@ const value = computed({
     return props.modelValue
   },
   set(value: Number | null) {
+    open.value = false
     emit('update:modelValue', value)
   }
 })
@@ -30,7 +31,6 @@ onClickOutside(targetOptions, () => open.value = false)
       'bg-white border-[#CBD5E1] absolute w-[59px] h-[32px] mb-6 flex flex-row border rounded-[5px]',
       { '!border-observer focused': open }
     ]"
-    @click="open = true"
   >
     <span
       @click="open = true"
@@ -43,20 +43,19 @@ onClickOutside(targetOptions, () => open.value = false)
     <div
       v-if="open"
       ref="targetOptions"
-      class="relative bottom-[-44px] left-[-46px] z-10"
-      @click="open = false"
+      class="relative bottom-[-40px] left-[-59px] z-10"
     >
       <div
-      class="
-        border border-[#CBD5E1]
-        flex flex-col items-center w-[59px]
-        shadow-lg rounded-xl
-        text-center
-      "
+        class="
+          border border-[#CBD5E1]
+          flex flex-col items-center w-[59px]
+          shadow-lg rounded-xl
+          text-center
+        "
       >
         <span
           v-for="opt in options"
-          class="flex justify-center items-center h-9 w-full hover:cursor-pointer hover:bg-neutral-light"
+          class="flex justify-center items-center h-9 w-full bg-white hover:cursor-pointer hover:bg-neutral-light"
           @click="value = opt"
         >
           {{ opt ? opt : 'All' }}
