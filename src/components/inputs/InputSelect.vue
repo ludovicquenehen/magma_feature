@@ -34,10 +34,10 @@ onClickOutside(targetOptions, () => open.value = false)
   >
     <span
       @click="open = true"
-      class="flex justify-center items-center ml-[10px]"
+      class="flex justify-between items-center ml-[10px]"
     >
-      {{ value ? value : 'All' }}
-      <Chevron :direction="open ? 'down' : 'up'" class="ml-3" @click="open = true" />
+      <span>{{ value ? value : 'All' }}</span>
+      <Chevron :direction="open ? 'down' : 'up'" class="mx-3" @click="open = true" />
     </span>
     <!-- //TODO: z-index/overflow issue -->
     <div

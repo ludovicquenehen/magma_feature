@@ -4,7 +4,7 @@ import { useMousePressed } from '@vueuse/core'
 import { Helper } from '../../types/Helper';
 import { cappitalizeFirstLetter, formatDate, formatNumber, formatStatus } from '../../helpers/utils'
 import Pagination from '../pagination/Pagination.vue'
-import InputSelect from '../innputs/InputSelect.vue';
+import InputSelect from '../inputs/InputSelect.vue';
 
 export type PerPage = 25 | 50 | 100 | null
 

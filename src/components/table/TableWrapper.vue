@@ -2,7 +2,7 @@
 import { computed, ref, Ref, watch } from 'vue'
 import { useScroll, useWindowSize } from '@vueuse/core'
 import { useTableScroll } from '../../composables/useTableScroll'
-import InputText from '../innputs/InputText.vue'
+import InputText from '../inputs/InputText.vue'
 import { Helper, Status } from '../../types/Helper';
 import datas from '../../datas/data'
 import { getHelperCriteriaByWeight } from '../../helpers/criteria';
