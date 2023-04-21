@@ -2,7 +2,7 @@
 Magma technical test
 
 # Issues
-* HelperTable component:
+* HelperTable:
   * columns' width not fixed: toggling
   * Inner shadow
     * `thead`: missing
@@ -13,3 +13,13 @@ Magma technical test
   * `z-index`/`overflow`: the options panel is showing up into the parent's component: 
     * table's overflow-y is showing
     * options panel is hidden
+
+# TODO
+* TableWrapper
+  * remove `TABLE_LIMIT` and calculate 
+* HelperTable:
+  * apply `box-shadow` in `HelperTable` rather than `TableWrapper`:
+    * solve `Inner shadow` ans `Hover cells` issues
+    * will facilitate the resolution of `InputSelect` issue
+* Pagination:
+  * put out `Pagination` and `InputSelect`components center on last table row
