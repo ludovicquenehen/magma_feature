@@ -94,7 +94,7 @@ const filterHelpers = computed(() => {
 const sortColumn: Ref<String | null> = ref(null)
 const sortOrder: Ref<'asc' | 'desc' | null> = ref(null)
 
-const setSort = (column: string, type: 'number' | 'text') => {
+const setSort = (column: string) => {
   page.value = 1
 
   const same = sortColumn.value === column

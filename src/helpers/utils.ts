@@ -1,7 +1,5 @@
 import { useDateFormat } from '@vueuse/core'
-import { CriteriaAnswer, Weight } from "../types/Criteria"
 import { Status } from "../types/Helper"
-import { getHelperCriteriaByWeight } from "./criteria"
 
 export const cappitalizeFirstLetter = (s: string): string => `${s.charAt(0).toUpperCase()}${s.slice(1).toLowerCase()}`
 

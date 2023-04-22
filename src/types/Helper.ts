@@ -12,8 +12,9 @@ export type Helper = {
   statusPonderation?: number
   relations: number
   points: number
+  lastSeen: string | null
   joinedOn: string | null
-  joinedOnTm: number | string
+  joinedOnTm?: number | string
   tagIds: number[]
   userCriteria: CriteriaAnswer[]
   strongCriteria?: string | null
