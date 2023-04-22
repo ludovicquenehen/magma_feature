@@ -1,19 +1,28 @@
 <script setup lang="ts">
-import { computed, ref } from 'vue';
+import { onMounted, ref, watch } from 'vue';
+import { useWindowSize } from '@vueuse/core'
 import TableWrapper from './components/table/TableWrapper.vue'
 import HelperTable from './components/table/HelperTable.vue'
 
 const wrapper = ref(null)
 const container = ref(null)
 const detailsPosition = ref('')
-const wrapperLimit = computed(() => {
-  const containerLeft = document.body.getBoundingClientRect().left
-  const right = (container?.value as unknown as Element)?.getBoundingClientRect().right
-  return right - containerLeft
-})
+const wrapperLimit = ref(-1)
 const setDetailsPosition = (v: string) => {
   detailsPosition.value = v
 }
+const setWrapperLimit = () => {
+  const containerLeft = document.body.getBoundingClientRect().left
+  const right = (container?.value as unknown as Element)?.getBoundingClientRect().right
+  wrapperLimit.value = right - containerLeft
+}
+
+const { width } = useWindowSize()
+watch(() => width.value, () => {
+  setWrapperLimit()
+})
+
+onMounted(() => setWrapperLimit())
 </script>
 
 <template>
