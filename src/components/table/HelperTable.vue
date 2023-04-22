@@ -103,7 +103,10 @@ const setSort = (column: string, type: 'number' | 'text') => {
     if (sortOrder.value === 'desc') sortOrder.value = 'asc'
     else sortOrder.value = null
   }
-  if (sortOrder.value) sortColumn.value = column
+  else if (sortOrder.value) {
+    sortOrder.value = 'desc'
+    sortColumn.value = column
+  }
   else {
     sortColumn.value = null
     sortOrder.value = null
