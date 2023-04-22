@@ -1,10 +1,10 @@
 <script setup lang="ts">
-import { onMounted, ref, watch } from 'vue';
+import { onMounted, ref, Ref, watch } from 'vue';
 import { useWindowSize } from '@vueuse/core'
 import TableWrapper from './components/table/TableWrapper.vue'
 import HelperTable from './components/table/HelperTable.vue'
 
-const wrapper = ref(null)
+const wrapper: Ref<InstanceType <typeof TableWrapper> | null> = ref(null)
 const container = ref(null)
 const detailsPosition = ref('')
 const wrapperLimit = ref(-1)
