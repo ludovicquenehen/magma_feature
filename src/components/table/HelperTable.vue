@@ -82,8 +82,12 @@ const columns: {
 
 /** Search */
 const filterHelpers = computed(() => {
-  const q = props.query.trim()
-  return current.value.filter((h: Helper) => h.firstname.includes(q) || h.lastname.includes(q) || h.email.includes(q))
+  const q = props.query.trim().toLowerCase()
+  return current.value.filter((h: Helper) => 
+    h.firstname.toLowerCase().includes(q) || 
+    h.lastname.toLowerCase().includes(q) || 
+    h.email.toLowerCase().includes(q)
+  )
 })
 
 /** Sort */
