@@ -31,7 +31,13 @@ onMounted(() => setWrapperLimit())
     <TableWrapper ref="wrapper">
       <template v-slot="props">
         <div ref="container">
-          <HelperTable :helpers="props.helpers" :full="props.full" :query="props.query" @clearQuery="wrapper?.clearQuery" @showDetail="setDetailsPosition" />
+          <HelperTable
+            :helpers="props.helpers"
+            :full="props.full"
+            :query="props.query"
+            @clearQuery="wrapper?.clearQuery"
+            @showDetail="setDetailsPosition"
+          />
         </div>
       </template>
     </TableWrapper>

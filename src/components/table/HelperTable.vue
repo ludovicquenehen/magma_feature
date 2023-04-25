@@ -12,7 +12,7 @@ const emit = defineEmits(['update:modelValue', 'clearQuery', 'showDetail'])
 const props = defineProps({
   helpers: { type: Array as () => Helper[], required: true },
   full: { type: Boolean, required: true },
-  query: { type: String, required: true },
+  query: { type: String, required: true }
 })
 
 const { pressed } = useMousePressed()
@@ -163,7 +163,7 @@ watch(() => filterHelpers.value, (v) => {
 <template>
   <div class="relative">
     <table @mouseleave="showDetails(-1)">
-      <thead class="bg-neutral-light border border-neutral h-[40px]"><!-- //TODO: missing inner shadow -->
+      <thead class="bg-neutral-light border border-neutral h-[40px]">
         <tr>
           <!-- //TODO: col width not fixed: toggling on search/sort/paginate -->
           <td
@@ -195,7 +195,6 @@ watch(() => filterHelpers.value, (v) => {
             </div>
           </td>
         </tr>
-        <!-- //TODO: hover override table inner shadow -->
         <tr
           v-for="helper in paginatedHelpers"
           :id="String(helper.helperId)"
@@ -240,7 +239,7 @@ watch(() => filterHelpers.value, (v) => {
           <td :colspan="columns.length" class="relative">
             <Pagination v-model="page" :nb-pages="nbPages" class="static" />
             <InputSelect v-model="perPage" :options="[25, 50, 100, null]" class="absolute top-3 right-4" />
-          </td><!-- //TODO: trailing inner shadow -->
+          </td>
         </tr>
       </tbody>
     </table>

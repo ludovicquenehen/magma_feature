@@ -17,11 +17,6 @@ $ yarn preview
 # Issues
 * HelperTable:
   * columns' width not fixed: toggling
-  * Inner shadow
-    * `thead`: missing
-    * `pagination's tr`: trailing
-  * Hover cells
-    * `hover:bg` override table's inner shadow
 * InputSelect:
   * `z-index`/`overflow`: the options panel is showing up into the parent's component: 
     * table's overflow-y is showing
@@ -30,9 +25,5 @@ $ yarn preview
 # TODO
 * TableWrapper
   * remove `TABLE_LIMIT` and calculate 
-* HelperTable:
-  * apply `box-shadow` in `HelperTable` rather than `TableWrapper`:
-    * solve `Inner shadow` ans `Hover cells` issues
-    * will facilitate the resolution of `InputSelect` issue
 * Pagination:
   * put out `Pagination` and `InputSelect`components center on last table row
