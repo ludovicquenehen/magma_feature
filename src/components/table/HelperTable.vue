@@ -100,18 +100,9 @@ const sortOrder: Ref<'asc' | 'desc' | null> = ref(null)
 const setSort = (column: string) => {
   const same = sortColumn.value === column
   if (!sortOrder.value) sortOrder.value = 'desc'
-  else if (same) {
-    if (sortOrder.value === 'desc') sortOrder.value = 'asc'
-    else sortOrder.value = null
-  }
-  else if (sortOrder.value) {
-    sortOrder.value = 'desc'
-    sortColumn.value = column
-  }
-  else {
-    sortColumn.value = null
-    sortOrder.value = null
-  }
+  else if (sortOrder.value === 'desc') sortOrder.value = 'asc'
+  else if (sortOrder.value === 'asc') sortOrder.value = null
+  if(sortOrder.value) sortColumn.value = column
   current.value = [...props.helpers]
 }
 
