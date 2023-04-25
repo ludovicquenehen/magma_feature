@@ -3,16 +3,15 @@ import { Ref, computed, onMounted, ref, watch } from 'vue';
 import { useMousePressed } from '@vueuse/core'
 import { Helper } from '../../types/Helper';
 import { cappitalizeFirstLetter, formatDate, formatNumber, formatStatus } from '../../helpers/utils'
-import Pagination from '../pagination/Pagination.vue'
-import InputSelect from '../inputs/InputSelect.vue';
+import { PerPage } from '../../types/Table'
 
-export type PerPage = 25 | 50 | 100 | null
-
-const emit = defineEmits(['update:modelValue', 'clearQuery', 'showDetail'])
+const emit = defineEmits(['update:modelValue', 'clearQuery', 'showDetail', 'records'])
 const props = defineProps({
   helpers: { type: Array as () => Helper[], required: true },
   full: { type: Boolean, required: true },
-  query: { type: String, required: true }
+  query: { type: String, required: true },
+  perPage: { type: Number as () => PerPage, default: 25 },
+  page: { type: Number, default: 1 },
 })
 
 const { pressed } = useMousePressed()
@@ -81,7 +80,7 @@ const columns: {
 ]
 
 /** Search */
-const filterHelpers = computed(() => {
+const filteredHelpers = computed(() => {
   const q = props.query.trim().toLowerCase()
   return current.value.filter((h: Helper) => 
     h.firstname.toLowerCase().includes(q) || 
@@ -90,13 +89,15 @@ const filterHelpers = computed(() => {
   )
 })
 
+watch(() => props.query, () => emit('records', nbRecords.value))
+
+onMounted(() => emit('records', nbRecords.value))
+
 /** Sort */
 const sortColumn: Ref<String | null> = ref(null)
 const sortOrder: Ref<'asc' | 'desc' | null> = ref(null)
 
 const setSort = (column: string) => {
-  page.value = 1
-
   const same = sortColumn.value === column
   if (!sortOrder.value) sortOrder.value = 'desc'
   else if (same) {
@@ -116,34 +117,26 @@ const setSort = (column: string) => {
 
 const sortedHelpers = computed(() => {
   const type = columns.find(e => e.property === sortColumn.value)?.type || 'string'
-  if (sortOrder.value === 'asc') return filterHelpers.value.sort((a: Helper, b: Helper) => {
+  if (sortOrder.value === 'asc') return filteredHelpers.value.sort((a: Helper, b: Helper) => {
     const aString = String(a[sortColumn.value  as keyof Helper]) || ''
     const bString = String(b[sortColumn?.value  as keyof Helper])|| ''
     return type === 'number' ? Number(aString) - Number(bString) : aString.localeCompare(bString)
   })
-  if (sortOrder.value === 'desc') return filterHelpers.value.sort((a: any, b: any) => {
+  if (sortOrder.value === 'desc') return filteredHelpers.value.sort((a: any, b: any) => {
     const aString = String(a[sortColumn.value as keyof Helper])|| ''
     const bString = String(b[sortColumn?.value  as keyof Helper])|| ''
     return type === 'number' ? Number(bString) - Number(aString) : bString.localeCompare(aString)
   })
-  return filterHelpers.value
+  return filteredHelpers.value
 })
 
 /** Pagination */
-const nbRecords = computed(() => filterHelpers.value.length)
-const page = ref(1)
-const perPage: Ref<PerPage> = ref(25)
-const nbPages = computed(() => {
-  return ~~(nbRecords.value / (perPage.value || 1)) + 1
-})
+const nbRecords = computed(() => filteredHelpers.value.length)
 
 const paginatedHelpers = computed(() => {
-  const start = (perPage.value || 0) * (page.value - 1)
-  return sortedHelpers.value.slice(start, start + (perPage.value || nbRecords.value))
+  const start = (props.perPage || 0) * (props.page - 1)
+  return sortedHelpers.value.slice(start, start + (props.perPage || nbRecords.value))
 })
-
-watch(() => props.query, () => page.value = 1)
-watch(() => perPage.value, () => page.value = 1)
 
 /** Détails on:hover */
 const hoveredIndex = ref(-1)
@@ -155,7 +148,7 @@ const showDetails = (herlperId: number) => {
   const rowTop = (hovered as unknown as Element)?.getBoundingClientRect().top;
   emit('showDetail', hovered === null ? -1 : (rowTop - containerTop))
 }
-watch(() => filterHelpers.value, (v) => {
+watch(() => filteredHelpers.value, (v) => {
   if (v.length === 0) showDetails(-1)
 })
 </script>
@@ -233,12 +226,6 @@ watch(() => filterHelpers.value, (v) => {
             <template v-else>
               <span class="text-sm text-gray text-left">{{ column.format ? column.format(helper) : '-' }}</span>
             </template>
-          </td>
-        </tr>
-        <tr v-if="nbPages > 1" class="border border-neutral h-[56px]">
-          <td :colspan="columns.length" class="relative">
-            <Pagination v-model="page" :nb-pages="nbPages" class="static" />
-            <InputSelect v-model="perPage" :options="[25, 50, 100, null]" class="absolute top-3 right-4" />
           </td>
         </tr>
       </tbody>

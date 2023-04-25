@@ -23,20 +23,28 @@ watch(() => width.value, () => {
 })
 
 onMounted(() => setWrapperLimit())
+
+/** Pagination */
+const page = ref(1)
+const perPage: Ref<PerPage> = ref(25)
+const nbRecords = ref(0)
 </script>
 
 <template>
-  <div class="flex flex-row">
+  <div class="flex flex-row mb-40">
     <div class="bg-neutral border border-neutral min-h-full min-w-[256px]"></div>
-    <TableWrapper ref="wrapper">
+    <TableWrapper ref="wrapper" :records="nbRecords" @page="v => page = v" @perPage="v => perPage = v">
       <template v-slot="props">
         <div ref="container">
           <HelperTable
             :helpers="props.helpers"
             :full="props.full"
             :query="props.query"
+            :page="page"
+            :perPage="perPage"
             @clearQuery="wrapper?.clearQuery"
             @showDetail="setDetailsPosition"
+            @records="v => nbRecords = v"
           />
         </div>
       </template>

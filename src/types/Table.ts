@@ -1,0 +1,1 @@
+export type PerPage = 25 | 50 | 100 | null
