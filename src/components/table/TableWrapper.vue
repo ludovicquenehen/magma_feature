@@ -92,6 +92,7 @@ watch(() => page.value, () => emit('page', page.value))
               'shadow-left': shadowedLeft && !shadowedRight,
               'shadow-right': shadowedRight && !shadowedLeft,
               'shadow-x': shadowedLeft && shadowedRight,
+              'border border-neutral shadow-b-md rounded-b-lg': records === 0
             }
           ]">
 
@@ -99,7 +100,7 @@ watch(() => page.value, () => emit('page', page.value))
         <slot :helpers="helpers" :full="fullyVisible" :query="query"></slot>
       </div>
     </div>
-    <div :style="widthStyle" class="h-14 flex flex-row justify-between mx-8 py-3 pr-3 border border-t-0 border-neutral rounded-lg shadow-b-md rounded-t-none">
+    <div v-if="records > 0" :style="widthStyle" class="h-14 flex flex-row justify-between mx-8 py-3 pr-3 border border-t-0 border-neutral rounded-lg shadow-b-md rounded-t-none">
       <div class="w-full flex justify-center">
         <Pagination v-if="nbPages > 1" v-model="page" :nb-pages="nbPages" />
       </div>
