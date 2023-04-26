@@ -14,10 +14,3 @@ $ yarn dev
 $ yarn build
 $ yarn preview
 ```
-# Issues
-* HelperTable:
-  * columns' width not fixed: toggling
-
-# TODO
-* TableWrapper
-  * remove `TABLE_LIMIT` and calculate 

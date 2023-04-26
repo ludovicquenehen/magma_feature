@@ -99,9 +99,9 @@ const sortOrder: Ref<'asc' | 'desc' | null> = ref(null)
 
 const setSort = (column: string) => {
   const same = sortColumn.value === column
-  if (!sortOrder.value) sortOrder.value = 'desc'
-  else if (sortOrder.value === 'desc') sortOrder.value = 'asc'
-  else if (sortOrder.value === 'asc') sortOrder.value = null
+  if (!sortOrder.value) sortOrder.value = 'asc'
+  else if (sortOrder.value === 'asc') sortOrder.value = 'desc'
+  else if (sortOrder.value === 'desc') sortOrder.value = null
   if(sortOrder.value) sortColumn.value = column
   current.value = [...props.helpers]
 }
@@ -149,7 +149,6 @@ watch(() => filteredHelpers.value, (v) => {
     <table @mouseleave="showDetails(-1)">
       <thead class="bg-neutral-light border border-neutral h-[40px]">
         <tr>
-          <!-- //TODO: col width not fixed: toggling on search/sort/paginate -->
           <td
             v-for="column in columns"
             :class="`text-xs text-gray text-left py-3 pl-6 ${column.class}`"
@@ -191,7 +190,7 @@ watch(() => filteredHelpers.value, (v) => {
           ]"
           @mouseover="showDetails(helper.helperId)"
           >
-          <td v-for="column in columns" class="pl-6">
+          <td v-for="column in columns" :class="`pl-6 ${column.class}`">
             <template v-if="column.name === 'Helper'">
               <div class="flex items-center pr-4">
                 <img :src="helper.profilePictureUrl" class="rounded-full h-8 w-8 mr-3 my-3"/>
@@ -227,25 +226,31 @@ watch(() => filteredHelpers.value, (v) => {
 <style scoped>
   .helper {
     min-width: 296px;
+    width: 296px;
   }
 
   .status {
     min-width: 128px;
+    width: 128px;
   }
 
   .relations {
     min-width: 96px;
+    width: 96px;
   }
 
   .points {
     min-width: 96px;
+    width: 96px;
   }
 
   .joined-on {
     min-width: 136px;
+    width: 136px;
   }
 
   .criteria {
     min-width: 200px;
+    width: 200px;
   }
 </style>
